@@ -9,7 +9,7 @@ at least `250` words.
 ## sensors.py
 
 > `main.py` asks for `air_fahrenheit()` and `difference()` and does not know how either sensor
-> works. Explain what `read_air()` does with the DHT22, and why the chip reads warmer than the air.
+> works. Explain what `read_air()` does with the DHT22, and why the two thermometers can disagree.
 
 TODO
 

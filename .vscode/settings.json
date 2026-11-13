@@ -27,6 +27,7 @@
       "reportMissingModuleSource": "none"
   },
   "python.terminal.activateEnvironment": false,
+  "terminal.integrated.minimumContrastRatio": 7,
   "python.analysis.extraPaths": [
       ".stubs",
       "src"

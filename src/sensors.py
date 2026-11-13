@@ -47,8 +47,8 @@ class Sensors:
         return 0
 
     def difference(self):
-        # TODO: Write a docstring: this method returns how many degrees warmer the chip is than
-        # the air
+        # TODO: Write a docstring: this method returns the chip's temperature minus the air's,
+        # in degrees Fahrenheit
         # TODO: Call self.chip_fahrenheit() and self.air_fahrenheit() to get the two
         # temperatures, and return the chip's minus the air's
         return 0

@@ -662,7 +662,8 @@
 <line x1="408" y1="-66" x2="408" y2="-52" stroke="#9a9a9a" stroke-width="4"/>
 <text x="420" y="-54" font-size="14" font-weight="700" fill="#f3e6cf">−</text>
 <path d="M318 -52 C 318 38, 184 66, 184 156" fill="none" stroke="#c63a2f" stroke-width="6" stroke-linecap="round"/>
-<path d="M408 -52 L 408 84" fill="none" stroke="#222" stroke-width="6" stroke-linecap="round"/>
+<path d="M408 -52 L 408 44 L 418 68 L 418 84" fill="none" stroke="#222" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="418" cy="84" r="5" fill="#2f2013"/>
 <path d="M363 -52 C 363 68, 198 324, 158 390" fill="none" stroke="#d6a10f" stroke-width="6" stroke-linecap="round" opacity="0.95"/>
 <circle cx="184" cy="156" r="5" fill="#2f2013"/>
 <circle cx="158" cy="390" r="5" fill="#2f2013"/>

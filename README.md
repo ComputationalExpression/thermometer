@@ -9,8 +9,9 @@
 Your kit has two thermometers: the DHT22 sensor module, which measures the temperature and the
 humidity of the air, and a temperature sensor built into the Pico's chip. In this lab your team
 builds a thermometer that lights one of three LEDs for cold, warm or hot, flashes it when the air is
-too dry or too humid, and keeps a log of what it measured. It also compares the two thermometers,
-since the chip warms itself as it runs.
+too dry or too humid, and keeps a log of what it measured. It also compares the two thermometers, which often disagree by
+a few degrees, in either direction: the chip's sensor measures the chip itself, which warms as it
+runs, and it is less precise than the DHT22.
 
 `Sensors` reads both sensors, `Comfort` decides whether a temperature and a humidity are
 comfortable, a `Display` drives the three LEDs, and a `Log` keeps the readings and works out the
@@ -121,7 +122,7 @@ how long the DHT22 needs between readings:
    level, which keeps one LED lit. If not, it tells the `Display` to `flash` it twice.
 
 When the readings end, `main.py` turns the LEDs off and prints the log from the `Log`'s methods,
-with how much warmer the chip is than the air from `Sensors`' `difference()`.
+with the chip's temperature minus the air's from `Sensors`' `difference()`.
 
 ### Sensors, in sensors.py
 
@@ -146,7 +147,7 @@ The chip's sensor is made with `ADC(4)`, and its `read_u16()` method returns a n
 |`read_air(self)` |Calls the DHT22's `measure()`, stores its `temperature()` in `air_celsius` and its `humidity()` in `humidity`, and adds 1 to `readings` |
 |`air_fahrenheit(self)` |Returns `air_celsius` in degrees Fahrenheit |
 |`chip_fahrenheit(self)` |Reads the chip's sensor and returns its temperature in degrees Fahrenheit, with the formulas above |
-|`difference(self)` |Returns `self.chip_fahrenheit()` minus `self.air_fahrenheit()` |
+|`difference(self)` |Returns `self.chip_fahrenheit()` minus `self.air_fahrenheit()`, which can be negative |
 
 ### Comfort, in comfort.py
 
@@ -224,7 +225,7 @@ Average humidity: 52.4
 Cold: 0
 Warm: 2
 Hot: 2
-Chip warmer by: 7.8
+Chip minus air: 7.8
 Comfortable now: False
 ```
 

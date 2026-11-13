@@ -2,7 +2,7 @@
 
 A thermometer that measures the air with a DHT22, lights one of three LEDs for cold, warm or hot,
 and flashes it when the air is too dry or too humid. It also reads the sensor inside the Pico's
-chip, to see how much warmer the chip runs than the air. Press the button to stop early.
+chip, to compare the two thermometers. Press the button to stop early.
 
 This file is provided. Your team writes the four classes it uses.
 
@@ -78,7 +78,7 @@ def main():
     print(f"Cold: {log.counts['cold']}")
     print(f"Warm: {log.counts['warm']}")
     print(f"Hot: {log.counts['hot']}")
-    print(f"Chip warmer by: {round(sensors.difference(), 1)}")
+    print(f"Chip minus air: {round(sensors.difference(), 1)}")
     print(f"Comfortable now: {comfort.is_comfortable(fahrenheit, humidity)}")
 
 

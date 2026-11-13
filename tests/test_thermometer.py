@@ -397,7 +397,7 @@ def check_log(out, board, context, place, air, counts, chip_raw):
         "Highest": round(max(temperatures), 1),
         "Lowest": round(min(temperatures), 1),
         "Average humidity": round(sum(humidities) / len(humidities), 1),
-        "Chip warmer by": round(chip_fahrenheit(chip_raw) - temperatures[-1], 1),
+        "Chip minus air": round(chip_fahrenheit(chip_raw) - temperatures[-1], 1),
     }
     for label, expected in numbers.items():
         got = log_value(out, label)
