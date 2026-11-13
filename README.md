@@ -6,14 +6,17 @@
 |Due |Friday, November 20, 2:30pm |
 |Progress |[![Grade](../../actions/workflows/main.yml/badge.svg?branch=main)](../../actions/workflows/main.yml) |
 
-The Pico has a temperature sensor built into its chip. In this lab your team turns it into a
-thermometer that lights one of three LEDs for cold, warm or hot, and keeps a log of what it read.
+Your kit has two thermometers: the DHT22 sensor module, which measures the temperature and the
+humidity of the air, and a temperature sensor built into the Pico's chip. In this lab your team
+builds a thermometer that lights one of three LEDs for cold, warm or hot, flashes it when the air is
+too dry or too humid, and keeps a log of what it measured. It also compares the two thermometers,
+since the chip warms itself as it runs.
 
-A `Sensor` reads the chip and converts the reading to degrees, `Levels` decides whether a
-temperature is cold, warm or hot, a `Display` drives the three LEDs, and a `Log` keeps the
-temperatures and works out the highest, lowest and average. The provided `main.py` brings them
-together. Each of you writes one class in its own file, on your own branch, and merges it through a
-pull request that two teammates approve.
+`Sensors` reads both sensors, `Comfort` decides whether a temperature and a humidity are
+comfortable, a `Display` drives the three LEDs, and a `Log` keeps the readings and works out the
+highest, lowest and average. The provided `main.py` brings them together. Each of you writes one
+class in its own file, on your own branch, and merges it through a pull request that two teammates
+approve.
 
 ## Contents
 
@@ -22,8 +25,8 @@ pull request that two teammates approve.
 * [The circuit](#the-circuit)
 * [The classes](#the-classes)
   * [How the classes connect](#how-the-classes-connect)
-  * [Sensor, in sensor.py](#sensor-in-sensorpy)
-  * [Levels, in levels.py](#levels-in-levelspy)
+  * [Sensors, in sensors.py](#sensors-in-sensorspy)
+  * [Comfort, in comfort.py](#comfort-in-comfortpy)
   * [Display, in display.py](#display-in-displaypy)
   * [Log, in log.py](#log-in-logpy)
   * [The program, in main.py](#the-program-in-mainpy)
@@ -54,7 +57,8 @@ Specifically, by the end of this lab you should be able to:
   the same object with `self`
 * explain how a class hides the details of its work behind its methods (abstraction), and why
   other code changes an object's data only through its methods (encapsulation)
-* read an analog value on the Pico with `ADC`
+* read an analog value on the Pico with `ADC`, and the temperature and humidity of the air with a
+  DHT22
 * work on a branch, open a pull request, review two teammates' pull requests, and merge your own
 
 ## Your team
@@ -64,8 +68,8 @@ person takes one:
 
 |File |What it holds |
 |:----|:-------------|
-|`src/sensor.py` |the `Sensor` class |
-|`src/levels.py` |the `Levels` class |
+|`src/sensors.py` |the `Sensors` class |
+|`src/comfort.py` |the `Comfort` class |
 |`src/display.py` |the `Display` class |
 |`src/log.py` |the `Log` class |
 
@@ -77,9 +81,18 @@ own branch and with its own pull request.
 
 ## The circuit
 
-You can keep your Lab 7 circuit as it is: three LEDs on GP15, GP14 and GP13, and the push button
-on GP16. The LED on GP15 shows hot, GP14 shows warm, and GP13 shows cold. The temperature sensor
-is inside the Pico's chip, so it needs no wiring.
+Please keep your Lab 7 circuit: three LEDs on GP15, GP14 and GP13, and the push button on GP16.
+The LED on GP15 shows hot, GP14 shows warm, and GP13 shows cold. Then connect the DHT22 module from
+your kit with three jumper wires, each into the breadboard row of the Pico pin it names. Remember to
+unplug the USB cable before you touch the wiring.
+
+|DHT22 pin |Pico pin |
+|:---------|:--------|
+|`+` |3V3 (physical pin 36) |
+|`OUT` |GP2 (physical pin 4) |
+|`-` |GND (physical pin 38) |
+
+The temperature sensor inside the chip needs no wiring.
 
 ![The Pico 2 W pinout, with each pin's GP number](images/pico-2-pinout.svg)
 
@@ -95,20 +108,29 @@ docstring for your class and for each of its methods in your own words.
 
 ### How the classes connect
 
-`main.py` makes one object of each class, then repeats these steps once a second:
+`main.py` makes one object of each class, then repeats these steps every two seconds, which is
+how long the DHT22 needs between readings:
 
-1. It asks the `Sensor` for `read_fahrenheit()`. The `Sensor` reads the chip and converts the
-   reading, so `main.py` does not need to know about voltages.
-2. It asks `Levels` for the `level` of that temperature: `"cold"`, `"warm"` or `"hot"`.
-3. It tells the `Display` to `show` that level, which lights one LED.
-4. It tells the `Log` to `record` the temperature and its level.
+1. It asks `Sensors` to `read_air()`, then for `air_fahrenheit()` and the `humidity`. `main.py`
+   does not need to know how the DHT22 works.
+2. It asks `Comfort` for the `level` of the temperature: `"cold"`, `"warm"` or `"hot"`.
+3. It tells the `Log` to `record` the temperature, the humidity and the level.
+4. If `Comfort` says the `humidity_level` is `"comfortable"`, it tells the `Display` to `show` the
+   level, which keeps one LED lit. If not, it tells the `Display` to `flash` it twice.
 
-When the readings end, `main.py` turns the LEDs off and prints the log from the `Log`'s methods.
+When the readings end, `main.py` turns the LEDs off and prints the log from the `Log`'s methods,
+with how much warmer the chip is than the air from `Sensors`' `difference()`.
 
-### Sensor, in sensor.py
+### Sensors, in sensors.py
 
-A `Sensor` is the Pico's own temperature sensor. The chip reports its temperature as a number from 0 to 65535 through analog channel 4, which you
-read with `ADC(4)` and its `read_u16()` method. These formulas turn that number into degrees:
+`Sensors` holds the DHT22 that measures the air, and the sensor inside the Pico's chip.
+
+The DHT22 is made with `dht.DHT22(Pin(2))`, from MicroPython's `dht` module. Its `measure()`
+method takes a new reading, and then `temperature()` returns it in degrees Celsius and `humidity()`
+returns the humidity in percent.
+
+The chip's sensor is made with `ADC(4)`, and its `read_u16()` method returns a number from 0 to
+65535. These formulas turn that number into degrees:
 
 |Value |Formula |
 |:-----|:-------|
@@ -118,60 +140,64 @@ read with `ADC(4)` and its `read_u16()` method. These formulas turn that number 
 
 |Method |What it does |
 |:------|:------------|
-|`__init__(self)` |Stores `ADC(4)`, and `readings` as `0` |
-|`read_voltage(self)` |Adds 1 to `readings`, and returns the voltage |
-|`read_celsius(self)` |Returns the temperature in Celsius, from `self.read_voltage()` |
-|`read_fahrenheit(self)` |Returns the temperature in Fahrenheit, from `self.read_celsius()` |
+|`__init__(self, air_pin)` |Stores `ADC(4)` and a DHT22 on `air_pin`, and `air_celsius`, `humidity` and `readings` as `0` |
+|`read_air(self)` |Calls the DHT22's `measure()`, stores its `temperature()` in `air_celsius` and its `humidity()` in `humidity`, and adds 1 to `readings` |
+|`air_fahrenheit(self)` |Returns `air_celsius` in degrees Fahrenheit |
+|`chip_fahrenheit(self)` |Reads the chip's sensor and returns its temperature in degrees Fahrenheit, with the formulas above |
+|`difference(self)` |Returns `self.chip_fahrenheit()` minus `self.air_fahrenheit()` |
 
-### Levels, in levels.py
+### Comfort, in comfort.py
 
-`Levels` holds two dividing temperatures, in degrees Fahrenheit, that sort a reading into a level.
+`Comfort` holds the dividing values that sort a temperature and a humidity into levels.
 
 |Method |What it does |
 |:------|:------------|
-|`__init__(self, cold_below, hot_above)` |Stores `cold_below` and `hot_above`, two temperatures in Fahrenheit |
+|`__init__(self, cold_below, hot_above, dry_below, humid_above)` |Stores the four values: two temperatures in degrees Fahrenheit and two humidities in percent |
 |`level(self, fahrenheit)` |Returns `"cold"` below `cold_below`, `"hot"` above `hot_above`, and `"warm"` otherwise, including at the two dividing temperatures |
-|`is_comfortable(self, fahrenheit)` |Returns `True` when the level is `"warm"`, and `False` otherwise, using `self.level` |
-|`describe(self, fahrenheit)` |Returns a string with the temperature rounded to one decimal place and its level, such as `72.5 F, warm`. `round(fahrenheit, 1)` does the rounding |
+|`humidity_level(self, humidity)` |Returns `"dry"` below `dry_below`, `"humid"` above `humid_above`, and `"comfortable"` otherwise |
+|`is_comfortable(self, fahrenheit, humidity)` |Returns `True` when the level is `"warm"` and the humidity level is `"comfortable"`, using the two methods above |
+|`describe(self, fahrenheit, humidity)` |Returns a string with the temperature and the humidity, each rounded to one decimal place, and both levels, such as `72.5 F, warm, 44.0% humidity, comfortable`. `round(fahrenheit, 1)` does the rounding |
 
 ### Display, in display.py
 
-A `Display` has one LED for each level, with at most one of them on.
+A `Display` has one LED for each temperature level, with at most one of them on.
 
 |Method |What it does |
 |:------|:------------|
 |`__init__(self, hot_pin, warm_pin, cold_pin)` |Stores a dictionary attribute `lights` with an output `Pin` for each of the keys `"hot"`, `"warm"` and `"cold"`, stores `showing` as `"off"`, and turns the LEDs off |
 |`all_off(self)` |Turns each LED off with a loop over the dictionary, and sets `showing` to `"off"` |
 |`show(self, level)` |Turns the three LEDs off with `self.all_off()`, then lights the LED for `level` and sets `showing` to `level` |
+|`flash(self, level)` |Calls `self.show(level)`, then `sleep(0.5)`, then `self.all_off()` |
 |`test_lights(self)` |Lights all three LEDs, calls `sleep(1)`, then turns them off |
 
 ### Log, in log.py
 
-A `Log` keeps the temperatures taken in one place, and how many fell in each level.
+A `Log` keeps the temperatures and humidities measured in one place, and how many fell in each level.
 
 |Method |What it does |
 |:------|:------------|
-|`__init__(self, place)` |Stores `place`, `temperatures` as an empty list, and `counts` as a dictionary with `0` for each of `"cold"`, `"warm"` and `"hot"` |
-|`record(self, fahrenheit, level)` |Appends the temperature to `temperatures`, and adds 1 to the count for its level |
+|`__init__(self, place)` |Stores `place`, `temperatures` and `humidities` as empty lists, and `counts` as a dictionary with `0` for each of `"cold"`, `"warm"` and `"hot"` |
+|`record(self, fahrenheit, humidity, level)` |Appends the temperature to `temperatures` and the humidity to `humidities`, and adds 1 to the count for the level |
 |`highest(self)` |Returns the highest temperature, with a loop that starts from the first one in the list |
 |`lowest(self)` |Returns the lowest temperature, the same way |
-|`average(self)` |Returns the total of the temperatures, added up in a loop, divided by how many there are |
+|`average_humidity(self)` |Returns the total of the humidities, added up in a loop, divided by how many there are |
 
-`main.py` records a temperature before it asks for any of these, so the list is not empty when they
+`main.py` records a reading before it asks for any of these, so the lists are not empty when they
 run.
 
 ### The program, in main.py
 
 `main.py` is provided, and it is worth reading to see how your class is used. It asks where the
 thermometer is and how many readings to take, makes the four objects, and tests the lights. Then
-it takes one reading a second until it has taken that many or the button is pressed, and prints
-the thermometer log. `COLD_BELOW` and `HOT_ABOVE` near the top set the levels. You are welcome to
-change them on your own computer to see each LED light at the temperature of your room.
+it takes a reading every two seconds until it has taken that many or the button is pressed, and
+prints the thermometer log. `COLD_BELOW`, `HOT_ABOVE`, `DRY_BELOW` and `HUMID_ABOVE` near the top
+set the levels. You are welcome to change them on your own computer to see each LED light in your
+room.
 
 ### Expected output
 
-Here is one run on the board with four readings, where a finger on the chip warmed it during the
-last two:
+Here is one run on the board with four readings, where breathing on the DHT22 warmed and dampened
+the air around it during the last two:
 
 ```text
 ==================================================
@@ -180,21 +206,22 @@ THERMOMETER
 Where is the thermometer? Alden 101
 How many readings should it take? 4
 Press the button to stop early
-Reading 1: 76.2 F, warm
-Reading 2: 77.0 F, warm
-Reading 3: 81.4 F, hot
-Reading 4: 83.0 F, hot
+Reading 1: 71.6 F, warm, 41.0% humidity, comfortable
+Reading 2: 72.1 F, warm, 41.5% humidity, comfortable
+Reading 3: 79.0 F, hot, 63.2% humidity, humid
+Reading 4: 80.2 F, hot, 64.0% humidity, humid
 
 ==================================================
 THERMOMETER LOG: Alden 101
 ==================================================
 Readings: 4
-Highest: 83.0
-Lowest: 76.2
-Average: 79.4
+Highest: 80.2
+Lowest: 71.6
+Average humidity: 52.4
 Cold: 0
 Warm: 2
 Hot: 2
+Chip warmer by: 7.8
 Comfortable now: False
 ```
 
@@ -227,7 +254,7 @@ uv run gatorgrade --config gatorgrade.yml
 ```
 
 Once all four classes are done, `uv run python src/main.py` runs the program on a laptop. A laptop
-has no sensor or button, so its temperatures are not real, and it stops after the first reading
+has no sensors or button, so its readings are not real, and it stops after the first reading
 because it reads the button as held down. To see real temperatures, please run the program on the
 Pico.
 
@@ -236,14 +263,14 @@ Pico.
 When all four files are merged, please pull `main` and run the thermometer on your own board. The
 Run button sends only the file you have open, so the four class files need to be on the board
 first. Open the folder of this lab in VS Code (File, Open Folder), then right-click each of
-`src/sensor.py`, `src/levels.py`, `src/display.py` and `src/log.py` in the Explorer, choose
+`src/sensors.py`, `src/comfort.py`, `src/display.py` and `src/log.py` in the Explorer, choose
 MicroPico, then **Upload File to Board**. You will need to upload a file again each time it
 changes. Then plug in the board, open `src/main.py`, and click **Run** in the bar along the bottom
 of the window. You should see **Board Connected** beside it:
 
 ![The bar along the bottom of VS Code, showing Board Connected and the Run button](images/run-button.png)
 
-A fingertip on the chip in the middle of the board warms it by a few degrees within a few seconds.
+Breathing gently on the DHT22 raises its temperature and humidity within a few readings.
 
 ## Evaluation
 
@@ -266,15 +293,17 @@ Each check's description says what to look at when it fails. Under a failed chec
 also prints a `uv run pytest ...` command, and when you run it, the last lines tell you what came
 out and what was expected. Here are the fourteen code checks:
 
-* `Sensor` reads `ADC(4)`, counts its readings and returns the voltage
-* `read_celsius` and `read_fahrenheit` convert with the formulas above
-* `level` sorts a temperature into cold, warm or hot
-* `is_comfortable` and `describe` answer from `level`
+* `Sensors` makes both sensors, and `read_air()` measures the air and counts the reading
+* `air_fahrenheit`, `chip_fahrenheit` and `difference` convert and compare the two temperatures
+* `level` and `humidity_level` sort a temperature and a humidity into levels
+* `is_comfortable` and `describe` answer from the two level methods
 * `Display` keeps its Pins in a dictionary, starts dark, and `all_off` turns them off
-* `show` lights one level's LED, and `test_lights` lights all three for one second
-* `Log` starts empty, and `record` adds a temperature and counts it
-* `highest`, `lowest` and `average` work for any list of temperatures, including below zero
-* the provided `main.py` runs with all four classes and logs the readings correctly
+* `show` lights one level's LED, `flash` lights it for half a second, and `test_lights` lights
+  all three for one second
+* `Log` starts empty, and `record` adds a reading and counts it
+* `highest`, `lowest` and `average_humidity` work for any readings, including below zero
+* the provided `main.py` runs with all four classes, flashes for uncomfortable humidity, and logs
+  the readings correctly
 * a press of the button stops the readings early
 * at least four pull requests are merged with Merge pull request
 * the files in `src` have commits from at least two teammates

@@ -9,8 +9,8 @@ from machine import Pin
 
 
 class Display:
-    # TODO: Write a docstring for the class: a Display has one LED for each level, with at most
-    # one of them on
+    # TODO: Write a docstring for the class: a Display has one LED for each temperature level,
+    # with at most one of them on
 
     def __init__(self, hot_pin, warm_pin, cold_pin):
         # TODO: Write a docstring: this method makes an output pin for each level and starts with
@@ -33,6 +33,12 @@ class Display:
         # TODO: Call self.all_off() to turn the three LEDs off, so that only one is on at the end
         # TODO: Call .on() on the Pin for level in self.lights
         # TODO: Assign level to self.showing
+        pass
+
+    def flash(self, level):
+        # TODO: Write a docstring: this method lights the LED for one level for half a second,
+        # then turns it off
+        # TODO: Call self.show(level) to light it, then sleep(0.5), then call self.all_off()
         pass
 
     def test_lights(self):

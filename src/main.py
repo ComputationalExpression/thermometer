@@ -1,7 +1,8 @@
 """Lab 8: Thermometer.
 
-A thermometer that reads the Pico's own temperature sensor, lights one of three LEDs for cold,
-warm or hot, and keeps a log of what it read. Press the button to stop early.
+A thermometer that measures the air with a DHT22, lights one of three LEDs for cold, warm or hot,
+and flashes it when the air is too dry or too humid. It also reads the sensor inside the Pico's
+chip, to see how much warmer the chip runs than the air. Press the button to stop early.
 
 This file is provided. Your team writes the four classes it uses.
 
@@ -12,27 +13,29 @@ from time import sleep
 
 from machine import Pin
 
+from comfort import Comfort
 from display import Display
-from levels import Levels
 from log import Log
-from sensor import Sensor
+from sensors import Sensors
 
-# Degrees Fahrenheit. Change these to try the lights at the temperature of your room
-COLD_BELOW = 70
-HOT_ABOVE = 80
+# Degrees Fahrenheit and percent humidity. Change these to try the lights in your room
+COLD_BELOW = 68
+HOT_ABOVE = 78
+DRY_BELOW = 30
+HUMID_ABOVE = 60
 
 
 def main():
-    """Take a number of readings, one a second, then print the thermometer log."""
+    """Take a number of readings, one every two seconds, then print the thermometer log."""
     print("=" * 50)
     print("THERMOMETER")
     print("=" * 50)
     place = input("Where is the thermometer? ")
     wanted = int(input("How many readings should it take? "))
 
-    # The GP numbers match the Lab 7 circuit, so the board needs no new wiring
-    sensor = Sensor()
-    levels = Levels(COLD_BELOW, HOT_ABOVE)
+    # The DHT22 is on GP2, and the LEDs and button match the Lab 7 circuit
+    sensors = Sensors(2)
+    comfort = Comfort(COLD_BELOW, HOT_ABOVE, DRY_BELOW, HUMID_ABOVE)
     display = Display(15, 14, 13)
     log = Log(place)
     button = Pin(16, Pin.IN, Pin.PULL_UP)
@@ -42,13 +45,22 @@ def main():
     stopped = False
     reading = 1
     while reading <= wanted and not stopped:
-        fahrenheit = sensor.read_fahrenheit()
-        level = levels.level(fahrenheit)
-        display.show(level)
-        log.record(fahrenheit, level)
-        print(f"Reading {reading}: {levels.describe(fahrenheit)}")
-        sleep(1)
-        # The button is read after a reading, so the log has at least one temperature
+        sensors.read_air()
+        fahrenheit = sensors.air_fahrenheit()
+        humidity = sensors.humidity
+        level = comfort.level(fahrenheit)
+        log.record(fahrenheit, humidity, level)
+        print(f"Reading {reading}: {comfort.describe(fahrenheit, humidity)}")
+        # A steady light means comfortable humidity, and a flashing light means too dry or too humid.
+        # Either way the loop waits two seconds, because the DHT22 needs that long between readings
+        if comfort.humidity_level(humidity) == "comfortable":
+            display.show(level)
+            sleep(2)
+        else:
+            for flash in range(2):
+                display.flash(level)
+                sleep(0.5)
+        # The button is read after a reading, so the log has at least one
         if button.value() == 0:
             stopped = True
             print("Stopped by the button")
@@ -59,14 +71,15 @@ def main():
     print("=" * 50)
     print(f"THERMOMETER LOG: {place}")
     print("=" * 50)
-    print(f"Readings: {sensor.readings}")
+    print(f"Readings: {sensors.readings}")
     print(f"Highest: {round(log.highest(), 1)}")
     print(f"Lowest: {round(log.lowest(), 1)}")
-    print(f"Average: {round(log.average(), 1)}")
+    print(f"Average humidity: {round(log.average_humidity(), 1)}")
     print(f"Cold: {log.counts['cold']}")
     print(f"Warm: {log.counts['warm']}")
     print(f"Hot: {log.counts['hot']}")
-    print(f"Comfortable now: {levels.is_comfortable(fahrenheit)}")
+    print(f"Chip warmer by: {round(sensors.difference(), 1)}")
+    print(f"Comfortable now: {comfort.is_comfortable(fahrenheit, humidity)}")
 
 
 if __name__ == "__main__":

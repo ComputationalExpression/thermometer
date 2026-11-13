@@ -26,8 +26,8 @@ body:
     attributes:
       label: File the reviewee wrote
       options:
-        - src/sensor.py
-        - src/levels.py
+        - src/sensors.py
+        - src/comfort.py
         - src/display.py
         - src/log.py
         - Two of these files, named in the justification below

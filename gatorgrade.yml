@@ -1,53 +1,53 @@
 # Sixteen checks. Each class is checked on its own: the checks give your class a pretend board
-# and a pretend temperature sensor, so a check passes or fails on its own file whatever state the
+# and pretend sensors, so a check passes or fails on its own file whatever state the
 # others are in. The program checks run all four classes together with the provided main.py and
 # read only the thermometer log. Time passes only when your code calls sleep.
 # Pull main before you run the checks, so you have each teammate's merged work.
 
-- description: "[SENSOR] Sensor() makes ADC(4) and starts readings at 0; read_voltage() adds 1 to readings and returns the reading times 3.3, divided by 65535"
+- description: "[SENSORS] Sensors(air_pin) makes ADC(4) and a DHT22 on the pin, with air_celsius, humidity and readings at 0; read_air() calls measure(), keeps the temperature and humidity, and adds 1 to readings"
   check: ExecuteCommand
   options:
-    command: uv run pytest tests/test_thermometer.py::test_the_sensor_reads_a_voltage_and_counts_it
+    command: uv run pytest tests/test_thermometer.py::test_the_sensors_start_and_measure_the_air
 
-- description: "[SENSOR] read_celsius() converts self.read_voltage() with the formula in the README, and read_fahrenheit() converts self.read_celsius()"
+- description: "[SENSORS] air_fahrenheit() converts air_celsius, chip_fahrenheit() converts a read_u16() reading with the formulas in the README, and difference() is the chip minus the air"
   check: ExecuteCommand
   options:
-    command: uv run pytest tests/test_thermometer.py::test_the_sensor_converts_to_celsius_and_fahrenheit
+    command: uv run pytest tests/test_thermometer.py::test_the_sensors_convert_and_compare
 
-- description: "[LEVELS] Levels(cold_below, hot_above) stores both; level(fahrenheit) returns cold below cold_below, hot above hot_above, and warm otherwise"
+- description: "[COMFORT] Comfort stores its four dividing values; level() returns cold, warm or hot, and humidity_level() returns dry, comfortable or humid"
   check: ExecuteCommand
   options:
-    command: uv run pytest tests/test_thermometer.py::test_the_levels_sort_a_temperature
+    command: uv run pytest tests/test_thermometer.py::test_comfort_sorts_a_temperature_and_a_humidity
 
-- description: "[LEVELS] is_comfortable(fahrenheit) returns True only for warm, and describe(fahrenheit) returns a string with the temperature rounded to one decimal place and its level"
+- description: "[COMFORT] is_comfortable() is True only for warm and comfortable, and describe() returns both values rounded to one decimal place, with both levels"
   check: ExecuteCommand
   options:
-    command: uv run pytest tests/test_thermometer.py::test_the_levels_describe_a_temperature
+    command: uv run pytest tests/test_thermometer.py::test_comfort_describes_a_reading
 
-- description: "[DISPLAY] Display(hot_pin, warm_pin, cold_pin) keeps its Pins in a dictionary with the keys hot, warm and cold, starts with showing as off, and all_off() turns them all off"
+- description: "[DISPLAY] Display(hot_pin, warm_pin, cold_pin) keeps its Pins in a dictionary with the keys hot, warm and cold, starts with showing as off, and all_off() turns them off"
   check: ExecuteCommand
   options:
     command: uv run pytest tests/test_thermometer.py::test_the_display_starts_dark_with_its_lights_in_a_dictionary
 
-- description: "[DISPLAY] show(level) lights only that level's LED and sets showing; test_lights() lights all three for one second, then turns them off"
+- description: "[DISPLAY] show(level) lights only that level's LED; flash(level) shows it for half a second, then turns it off; test_lights() lights all three for one second"
   check: ExecuteCommand
   options:
-    command: uv run pytest tests/test_thermometer.py::test_the_display_shows_one_level_and_tests_its_lights
+    command: uv run pytest tests/test_thermometer.py::test_the_display_shows_flashes_and_tests_its_lights
 
-- description: "[LOG] Log(place) stores place, an empty temperatures list and counts of 0 for cold, warm and hot; record(fahrenheit, level) adds to both"
+- description: "[LOG] Log(place) stores place, empty temperatures and humidities lists, and counts of 0 for cold, warm and hot; record() adds to the three"
   check: ExecuteCommand
   options:
-    command: uv run pytest tests/test_thermometer.py::test_the_log_records_temperatures
+    command: uv run pytest tests/test_thermometer.py::test_the_log_records_readings
 
-- description: "[LOG] highest(), lowest() and average() loop over the temperatures; start highest and lowest from the first temperature, not from 0"
+- description: "[LOG] highest(), lowest() and average_humidity() loop over their list; start highest and lowest from the first temperature, not from 0"
   check: ExecuteCommand
   options:
-    command: uv run pytest tests/test_thermometer.py::test_the_log_finds_the_highest_lowest_and_average
+    command: uv run pytest tests/test_thermometer.py::test_the_log_finds_the_highest_lowest_and_average_humidity
 
-- description: "[PROGRAM] The provided main.py runs with all four classes and logs Readings, Highest, Lowest, Average, Cold, Warm and Hot, with the LEDs off at the end"
+- description: "[PROGRAM] The provided main.py runs with all four classes, flashes the LED when the humidity is not comfortable, and logs the readings, with the LEDs off at the end"
   check: ExecuteCommand
   options:
-    command: uv run pytest tests/test_thermometer.py::test_the_program_reads_the_temperature_and_logs_it
+    command: uv run pytest tests/test_thermometer.py::test_the_program_reads_both_sensors_and_logs_them
 
 - description: "[PROGRAM] A press of the button stops the readings early, and the log counts only the readings taken"
   check: ExecuteCommand

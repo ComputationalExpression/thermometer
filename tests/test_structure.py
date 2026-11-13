@@ -12,7 +12,7 @@ import tokenize
 from pathlib import Path
 
 SRC = Path(__file__).resolve().parent.parent / "src"
-FILES = ("sensor.py", "levels.py", "display.py", "log.py", "main.py")
+FILES = ("sensors.py", "comfort.py", "display.py", "log.py", "main.py")
 
 
 def git(*args):
@@ -24,7 +24,7 @@ def test_pull_requests_were_merged():
     subjects = git("log", "--merges", "--format=%s").splitlines()
     merged = [subject for subject in subjects if "pull request" in subject.lower()]
     assert len(merged) >= 4, (
-        f"Found {len(merged)} merged pull requests, expected at least 4: one for each of sensor.py, levels.py, "
+        f"Found {len(merged)} merged pull requests, expected at least 4: one for each of sensors.py, comfort.py, "
         f"display.py and log.py. Merge with Merge pull request, not Squash and merge, and pull main "
         f"before you run this check."
     )

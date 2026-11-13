@@ -23,7 +23,7 @@ author.
   when it runs, what `self` stands for, how an attribute keeps its value between method calls,
   how a method calls another method of the same object with `self`, how a dictionary can hold
   Pins, what abstraction and encapsulation mean for their class, what `ADC(4)` and `read_u16()`
-  return, what `round(x, 1)` does, how `from sensor import Sensor` finds a class in another file
+  return, what the DHT22's `measure()`, `temperature()` and `humidity()` do, what `round(x, 1)` does, how `from sensors import Sensors` finds a class in another file
   in `src`, and why `highest` starts from the first temperature in the list.
 - Explain the team workflow: what a branch is, why each teammate works in a separate file,
   what a pull request and a review are, why the lab asks for Merge pull request rather than
@@ -40,7 +40,7 @@ author.
   `d[key] = value`, `len`, `in`, `not in` and `for key in d`, strings with `.upper()`,
   `.lower()`, `.strip()`, `.split()` and `.replace()`, files with `open` (and `encoding="utf-8"`), `.readline()`, `.read()`,
   `.write()` and the modes `"w"` and `"a"`, classes with `__init__`, `self`, attributes and
-  methods, `ADC` with `read_u16()`, `round(x, 1)`, `import` from another file, and `print` with commas, `+`, or an f-string. Do not
+  methods, `ADC` with `read_u16()`, `dht.DHT22` with `measure()`, `temperature()` and `humidity()`, `round(x, 1)`, `import` from another file, and `print` with commas, `+`, or an f-string. Do not
   suggest inheritance, default parameters, special methods other than `__init__`, `.get`, `.keys`, `.values`, `.items`, `del`, `pop`, `Counter`, `sorted`, `max`,
   `sum`, `enumerate`, `break`, `continue`, `try`/`except`, regular expressions, or
   comprehensions.

@@ -6,32 +6,32 @@ The last question is for the team to answer together. Each answer starts as a pl
 so please replace each marker with your writing and delete the marker itself. This document needs
 at least `250` words.
 
-## sensor.py
+## sensors.py
 
-> `main.py` calls `read_fahrenheit()` and does not know that a voltage is involved. Explain what
-> happens inside your `Sensor` during one call, and why `readings` goes up by exactly one.
+> `main.py` asks for `air_fahrenheit()` and `difference()` and does not know how either sensor
+> works. Explain what `read_air()` does with the DHT22, and why the chip reads warmer than the air.
 
 TODO
 
-## levels.py
+## comfort.py
 
-> A reading of exactly `80` with `Levels(70, 80)` is warm. Explain how your `level` decides
-> that, and why `is_comfortable` and `describe` call `self.level` instead of comparing the
-> temperatures again.
+> A reading of exactly `78` with `Comfort(68, 78, 30, 60)` is warm. Explain how your `level`
+> decides that, and why `is_comfortable` and `describe` call your two level methods instead of
+> comparing the values again.
 
 TODO
 
 ## display.py
 
-> Explain what `show` does when the level changes from warm to hot, and what would go wrong if it
-> did not call `self.all_off()` first.
+> Explain what `show` does when the level changes from warm to hot, and how `flash` uses `show`
+> and `all_off` instead of turning the LEDs on and off itself.
 
 TODO
 
 ## log.py
 
 > Explain why `highest` starts from the first temperature in the list rather than from `0`, and
-> what `counts` holds after three warm readings and one hot one.
+> what `temperatures`, `humidities` and `counts` hold after two warm readings and one hot one.
 
 TODO
 
