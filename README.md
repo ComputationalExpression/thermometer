@@ -94,6 +94,8 @@ unplug the USB cable before you touch the wiring.
 
 The temperature sensor inside the chip needs no wiring.
 
+![Three LEDs on GP15, GP14 and GP13, a push button on GP16, and a DHT22 above the board with its + wire to row 5 i beside 3V3, its OUT wire to row 4 b beside GP2, and its minus wire to the top minus rail](images/thermometer-circuit.svg)
+
 ![The Pico 2 W pinout, with each pin's GP number](images/pico-2-pinout.svg)
 
 ## The classes
