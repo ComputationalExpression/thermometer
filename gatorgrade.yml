@@ -1,0 +1,88 @@
+# Sixteen checks. Each class is checked on its own: the checks give your class a pretend board
+# and a pretend temperature sensor, so a check passes or fails on its own file whatever state the
+# others are in. The program checks run all four classes together with the provided main.py and
+# read only the thermometer log. Time passes only when your code calls sleep.
+# Pull main before you run the checks, so you have each teammate's merged work.
+
+- description: "[SENSOR] Sensor() makes ADC(4) and starts readings at 0; read_voltage() adds 1 to readings and returns the reading times 3.3, divided by 65535"
+  check: ExecuteCommand
+  options:
+    command: uv run pytest tests/test_thermometer.py::test_the_sensor_reads_a_voltage_and_counts_it
+
+- description: "[SENSOR] read_celsius() converts self.read_voltage() with the formula in the README, and read_fahrenheit() converts self.read_celsius()"
+  check: ExecuteCommand
+  options:
+    command: uv run pytest tests/test_thermometer.py::test_the_sensor_converts_to_celsius_and_fahrenheit
+
+- description: "[LEVELS] Levels(cold_below, hot_above) stores both; level(fahrenheit) returns cold below cold_below, hot above hot_above, and warm otherwise"
+  check: ExecuteCommand
+  options:
+    command: uv run pytest tests/test_thermometer.py::test_the_levels_sort_a_temperature
+
+- description: "[LEVELS] is_comfortable(fahrenheit) returns True only for warm, and describe(fahrenheit) returns a string with the temperature rounded to one decimal place and its level"
+  check: ExecuteCommand
+  options:
+    command: uv run pytest tests/test_thermometer.py::test_the_levels_describe_a_temperature
+
+- description: "[DISPLAY] Display(hot_pin, warm_pin, cold_pin) keeps its Pins in a dictionary with the keys hot, warm and cold, starts with showing as off, and all_off() turns them all off"
+  check: ExecuteCommand
+  options:
+    command: uv run pytest tests/test_thermometer.py::test_the_display_starts_dark_with_its_lights_in_a_dictionary
+
+- description: "[DISPLAY] show(level) lights only that level's LED and sets showing; test_lights() lights all three for one second, then turns them off"
+  check: ExecuteCommand
+  options:
+    command: uv run pytest tests/test_thermometer.py::test_the_display_shows_one_level_and_tests_its_lights
+
+- description: "[LOG] Log(place) stores place, an empty temperatures list and counts of 0 for cold, warm and hot; record(fahrenheit, level) adds to both"
+  check: ExecuteCommand
+  options:
+    command: uv run pytest tests/test_thermometer.py::test_the_log_records_temperatures
+
+- description: "[LOG] highest(), lowest() and average() loop over the temperatures; start highest and lowest from the first temperature, not from 0"
+  check: ExecuteCommand
+  options:
+    command: uv run pytest tests/test_thermometer.py::test_the_log_finds_the_highest_lowest_and_average
+
+- description: "[PROGRAM] The provided main.py runs with all four classes and logs Readings, Highest, Lowest, Average, Cold, Warm and Hot, with the LEDs off at the end"
+  check: ExecuteCommand
+  options:
+    command: uv run pytest tests/test_thermometer.py::test_the_program_reads_the_temperature_and_logs_it
+
+- description: "[PROGRAM] A press of the button stops the readings early, and the log counts only the readings taken"
+  check: ExecuteCommand
+  options:
+    command: uv run pytest tests/test_thermometer.py::test_the_program_stops_when_the_button_is_pressed
+
+- description: "[GIT] At least four pull requests are merged with Merge pull request, one for each class file"
+  check: ExecuteCommand
+  options:
+    command: uv run pytest tests/test_structure.py::test_pull_requests_were_merged
+
+- description: "[GIT] The files in src have commits from at least two teammates"
+  check: ExecuteCommand
+  options:
+    command: uv run pytest tests/test_structure.py::test_teammates_each_committed_to_src
+
+- description: "[CODE] No TODO markers remain in any file in src: delete each one once its code is written, including Author"
+  check: ExecuteCommand
+  options:
+    command: uv run pytest tests/test_structure.py::test_no_file_has_a_todo
+
+- description: "[CODE] Each file in src has at least two comments: say why, not what the line already says"
+  check: ExecuteCommand
+  options:
+    command: uv run pytest tests/test_structure.py::test_each_file_has_two_comments
+
+- docs/summary.md:
+  - description: "[SUMMARY] No TODO markers remain in docs/summary.md: replace each one with your answer, then delete it"
+    check: MatchFileFragment
+    options:
+      fragment: TODO
+      count: 0
+      exact: true
+  - description: "[SUMMARY] At least 250 words in docs/summary.md: each teammate answers the question for their own file, and the team answers the last one together"
+    check: CountFileWords
+    options:
+      count: 250
+      exact: false
