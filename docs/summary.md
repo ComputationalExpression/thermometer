@@ -3,8 +3,8 @@
 Each teammate answers the question for the file they wrote, under that file's heading, in full
 sentences. In a team of three, please also agree on who answers the question for the extra file.
 The last two questions are for the team to answer together. Each answer starts as a placeholder
-marker, so please replace each marker with your writing and delete the marker itself. This document needs
-at least `250` words.
+marker, so please replace each marker with your writing and delete the marker itself. This
+document needs at least `250` words.
 
 ## sensors.py
 

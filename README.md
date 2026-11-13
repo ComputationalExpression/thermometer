@@ -9,15 +9,15 @@
 Your kit has two thermometers: the DHT22 sensor module, which measures the temperature and the
 humidity of the air, and a temperature sensor built into the Pico's chip. In this lab your team
 builds a thermometer that lights one of three LEDs for cold, warm or hot, flashes it when the air is
-too dry or too humid, and keeps a log of what it measured. It also compares the two thermometers, which often disagree by
-a few degrees, in either direction: the chip's sensor measures the chip itself, which warms as it
-runs, and it is less precise than the DHT22.
+too dry or too humid, and keeps a log of what it measured. It also compares the two thermometers,
+which often disagree by a few degrees, in either direction: the chip's sensor measures the chip
+itself, which warms as it runs, and it is less precise than the DHT22.
 
 `Sensors` reads both sensors, `Comfort` decides whether a temperature and a humidity are
 comfortable, a `Display` drives the three LEDs, and a `Log` keeps the readings and works out the
-highest, lowest and average. The provided `main.py` brings them together. Each of you writes one
-class in its own file, on your own branch, and merges it through a pull request that two teammates
-approve.
+highest and lowest temperatures and the average humidity. The provided `main.py` brings them
+together. Each of you writes one class in its own file, on your own branch, and merges it through a
+pull request that two teammates approve.
 
 ## Contents
 
@@ -86,14 +86,14 @@ own branch and with its own pull request.
 
 Please keep your Lab 7 circuit: three LEDs on GP15, GP14 and GP13, and the push button on GP16.
 The LED on GP15 shows hot, GP14 shows warm, and GP13 shows cold. Then connect the DHT22 module from
-your kit with three jumper wires, each into the breadboard row of the Pico pin it names. Remember to
-unplug the USB cable before you touch the wiring.
+your kit with three jumper wires, as in the table and the diagram below. Remember to unplug the
+USB cable before you touch the wiring.
 
-|DHT22 pin |Pico pin |
-|:---------|:--------|
-|`+` |3V3 (physical pin 36) |
-|`OUT` |GP2 (physical pin 4) |
-|`-` |GND (physical pin 38) |
+|DHT22 pin |Where its wire goes |
+|:---------|:-------------------|
+|`+` |row 5, column i, beside 3V3 (physical pin 36) |
+|`OUT` |row 4, column b, beside GP2 (physical pin 4) |
+|`-` |the top minus rail, which your Lab 7 jumper from row 3 connects to GND (physical pin 38) |
 
 The Pico's chip is the RP2350, the black square near the middle of the board that runs your
 program, and it has a temperature sensor built into it. The sensor is connected inside the chip to
@@ -107,11 +107,10 @@ channel 4 of its analog-to-digital converter, so it needs no wiring and no GP pi
 
 The Week 11 slides and
 [Methods, Abstraction, Encapsulation](https://computationalexpression.com/slides/week-12-session-3/)
-cover what this lab asks for.
-The class names, method names and the attributes named below must match exactly, because the
-automated checks use them, and because your teammates' code calls yours. You can choose the other
-names yourself. The `TODO` comments in your file walk through each method, and you write a
-docstring for your class and for each of its methods in your own words.
+cover what this lab asks for. The class names, method names and the attributes named below must
+match exactly, because the automated checks use them, and because your teammates' code calls
+yours. You can choose the other names yourself. The `TODO` comments in your file walk through each
+method, and you write a docstring for your class and for each of its methods in your own words.
 
 ### How the classes connect
 
@@ -180,7 +179,8 @@ A `Display` has one LED for each temperature level, with at most one of them on.
 
 ### Log, in log.py
 
-A `Log` keeps the temperatures and humidities measured in one place, and how many fell in each level.
+A `Log` keeps the temperatures and humidities measured in one place, and how many fell in each
+level.
 
 |Method |What it does |
 |:------|:------------|
@@ -203,7 +203,8 @@ until the next reading ends.
 
 The log counts how many readings were cold, warm and hot. `Chip minus air` is the chip's
 temperature minus the air's, in degrees Fahrenheit, at the end of the run: a positive number means
-the chip reads warmer than the air, and a negative one means it reads cooler.
+the chip reads warmer than the air, and a negative one means it reads cooler. `Comfortable now` is
+`True` when the last reading was warm with a comfortable humidity.
 
 ### Your team's levels
 
