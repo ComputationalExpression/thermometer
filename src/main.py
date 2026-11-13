@@ -48,7 +48,7 @@ def main():
         log.record(fahrenheit, level)
         print(f"Reading {reading}: {levels.describe(fahrenheit)}")
         sleep(1)
-        # The button is read after a reading, so the log always has at least one temperature
+        # The button is read after a reading, so the log has at least one temperature
         if button.value() == 0:
             stopped = True
             print("Stopped by the button")

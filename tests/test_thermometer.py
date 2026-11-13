@@ -42,7 +42,7 @@ class Board:
 
     `raws` is the list of numbers the temperature sensor reports in turn.
     `presses` is a list of (start, end) times in seconds: the button reads 0 while
-    the clock is inside one of them. `clock` adds up every sleep, and `sleeps`
+    the clock is inside one of them. `clock` adds up the time slept, and `sleeps`
     keeps which LEDs were lit during each one.
     """
 
@@ -228,7 +228,7 @@ def test_the_display_starts_dark_with_its_lights_in_a_dictionary():
         f"Display(15, 14, 13) put the levels on {pins}, expected hot on GP15, warm on GP14 and cold on GP13"
     )
     assert not any(lit.get(number) for number in (13, 14, 15)) and showing == "off", (
-        f"after Display(15, 14, 13), showing was {showing!r}, expected 'off', with every LED off"
+        f"after Display(15, 14, 13), showing was {showing!r}, expected 'off', with the three LEDs off"
     )
     assert not any(after_lit.get(number) for number in (13, 14, 15)) and after_showing == "off", (
         f"after all_off(), showing was {after_showing!r} and the LEDs on were "
@@ -263,7 +263,7 @@ def test_the_display_shows_one_level_and_tests_its_lights():
         f"sleep(1) with all three on"
     )
     assert lit_after == [] and showing == "off", (
-        f"after test_lights(), the LEDs on GP{lit_after} were on and showing was {showing!r}, expected every LED "
+        f"after test_lights(), the LEDs on GP{lit_after} were on and showing was {showing!r}, expected the three LEDs "
         f"off and 'off'"
     )
 
@@ -352,7 +352,7 @@ def check_log(out, board, context, place, temperatures, counts):
             f'the "{label}" line said {got}, expected {expected} ({context})'
         )
     assert not any(board.lit.get(number) for number in (13, 14, 15)), (
-        f"a light was still on when the program ended ({context}): all_off turns every LED off"
+        f"a light was still on when the program ended ({context}): all_off turns the three LEDs off"
     )
 
 

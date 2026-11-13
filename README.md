@@ -85,8 +85,9 @@ is inside the Pico's chip, so it needs no wiring.
 
 ## The classes
 
-Everything this lab asks for is covered by the Week 11 slides and
-[Methods, Abstraction, Encapsulation](https://computationalexpression.com/slides/week-12-session-3/).
+The Week 11 slides and
+[Methods, Abstraction, Encapsulation](https://computationalexpression.com/slides/week-12-session-3/)
+cover what this lab asks for.
 The class names, method names and the attributes named below must match exactly, because the
 automated checks use them, and because your teammates' code calls yours. You can choose the other
 names yourself. The starter gives each method its docstring.
