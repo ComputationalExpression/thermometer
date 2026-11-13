@@ -7,24 +7,33 @@ from machine import ADC
 
 
 class Sensor:
-    """The Pico's own temperature sensor, read through its analog channel 4."""
+    # TODO: Write a docstring for the class: a Sensor is the Pico's own temperature sensor, read
+    # through its analog channel 4
 
     def __init__(self):
-        """Connect to the sensor, with no readings taken yet."""
-        # TODO: Store ADC(4), and readings as 0
+        # TODO: Write a docstring: this method connects to the sensor, with no readings taken yet
+        # TODO: Assign ADC(4) to an attribute, such as self.adc, so the other methods can read
+        # the sensor through it
+        # TODO: Assign 0 to the attribute self.readings
         pass
 
     def read_voltage(self):
-        """Read the sensor once and return the voltage it reports."""
-        # TODO: Add 1 to readings, then return the ADC's read_u16() times 3.3, divided by 65535
+        # TODO: Write a docstring: this method reads the sensor once and returns the voltage
+        # TODO: Add 1 to self.readings
+        # TODO: Call read_u16() on your ADC attribute to get the reading, multiply it by 3.3,
+        # divide it by 65535, and return the result
         return 0
 
     def read_celsius(self):
-        """Read the sensor once and return the temperature in degrees Celsius."""
-        # TODO: Use self.read_voltage() and the Celsius formula in the README
+        # TODO: Write a docstring: this method reads the sensor once and returns the temperature
+        # in degrees Celsius
+        # TODO: Call self.read_voltage() to get the voltage, then use the Celsius formula in the
+        # README to turn that voltage into degrees Celsius, and return the result
         return 0
 
     def read_fahrenheit(self):
-        """Read the sensor once and return the temperature in degrees Fahrenheit."""
-        # TODO: Use self.read_celsius() and the Fahrenheit formula in the README
+        # TODO: Write a docstring: this method reads the sensor once and returns the temperature
+        # in degrees Fahrenheit
+        # TODO: Call self.read_celsius() to get the temperature in Celsius, then use the
+        # Fahrenheit formula in the README to turn it into degrees Fahrenheit, and return the result
         return 0

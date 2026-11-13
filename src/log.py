@@ -5,30 +5,42 @@ Author: TODO your name
 
 
 class Log:
-    """The temperatures taken in one place, and how many fell in each level."""
+    # TODO: Write a docstring for the class: a Log keeps the temperatures taken in one place,
+    # and how many fell in each level
 
     def __init__(self, place):
-        """Start an empty log for a place."""
-        # TODO: Store place, an empty list of temperatures, and counts, a dictionary with 0 for
-        # "cold", "warm" and "hot"
+        # TODO: Write a docstring: this method starts an empty log for a place
+        # TODO: Assign the parameter place to the attribute self.place
+        # TODO: Assign an empty list to the attribute self.temperatures
+        # TODO: Assign to the attribute self.counts a dictionary with the keys "cold", "warm" and
+        # "hot", each with the value 0
         pass
 
     def record(self, fahrenheit, level):
-        """Add one temperature and count it under its level."""
-        # TODO
+        # TODO: Write a docstring: this method adds one temperature and counts it under its level
+        # TODO: Append fahrenheit to self.temperatures
+        # TODO: Add 1 to self.counts[level]
         pass
 
     def highest(self):
-        """Return the highest temperature recorded."""
-        # TODO: Loop over the temperatures, starting from the first one
+        # TODO: Write a docstring: this method returns the highest temperature recorded
+        # TODO: Assign the first temperature, self.temperatures[0], to a variable such as highest
+        # TODO: Loop over self.temperatures, and if a temperature is above highest, assign it
+        # to highest
+        # TODO: Return highest
         return 0
 
     def lowest(self):
-        """Return the lowest temperature recorded."""
-        # TODO
+        # TODO: Write a docstring: this method returns the lowest temperature recorded
+        # TODO: Assign the first temperature, self.temperatures[0], to a variable such as lowest
+        # TODO: Loop over self.temperatures, and if a temperature is below lowest, assign it
+        # to lowest
+        # TODO: Return lowest
         return 0
 
     def average(self):
-        """Return the average of the temperatures recorded."""
-        # TODO: Total them in a loop, then divide by how many there are
+        # TODO: Write a docstring: this method returns the average of the temperatures recorded
+        # TODO: Assign 0 to a variable such as total, then loop over self.temperatures and add
+        # each temperature to total
+        # TODO: Return total divided by len(self.temperatures)
         return 0

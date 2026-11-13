@@ -24,7 +24,7 @@ TODO
 ## display.py
 
 > Explain what `show` does when the level changes from warm to hot, and what would go wrong if it
-> did not turn the other LEDs off first.
+> did not call `self.all_off()` first.
 
 TODO
 

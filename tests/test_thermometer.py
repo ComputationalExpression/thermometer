@@ -256,7 +256,7 @@ def test_the_display_shows_one_level_and_tests_its_lights():
     for level, got_showing, got_lit in seen:
         assert (got_showing, got_lit) == (level, pins[level]), (
             f"after show({level!r}), showing was {got_showing!r} and the LEDs on were on GP{got_lit}, expected "
-            f"{level!r} and only GP{pins[level][0]}: turn the others off first"
+            f"{level!r} and only GP{pins[level][0]}: call self.all_off() before you light it"
         )
     assert sleeps == [(1, [13, 14, 15])], (
         f"test_lights() slept {[s for s, _ in sleeps]} with the LEDs on GP{[on for _, on in sleeps]}, expected one "

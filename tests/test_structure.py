@@ -1,10 +1,11 @@
-"""Structure, history and comment checks for Lab 8: Thermometer.
+"""Structure, history, comment and docstring checks for Lab 8: Thermometer.
 
 The comment check reads the files in src as Python, not as text. The history
 checks read the repository's git log: the merges GitHub makes for pull requests,
 and who committed to src.
 """
 
+import ast
 import io
 import subprocess
 import tokenize
@@ -51,9 +52,15 @@ def test_no_file_has_a_todo():
         )
 
 
-def test_each_file_has_two_comments():
+def test_each_file_has_docstrings_and_two_comments():
     for name in FILES:
         found = [tok.string for tok in comments(name) if "TODO" not in tok.string]
         assert len(found) >= 2, (
             f"src/{name} has {len(found)} comment(s) besides TODO markers, expected at least 2: say why, not what"
+        )
+        tree = ast.parse((SRC / name).read_text(encoding="utf-8"))
+        missing = [node.name for node in ast.walk(tree)
+                   if isinstance(node, (ast.ClassDef, ast.FunctionDef)) and not ast.get_docstring(node)]
+        assert not missing, (
+            f"src/{name} has no docstring for {', '.join(missing)}: say in one sentence what each one does"
         )

@@ -9,25 +9,35 @@ from machine import Pin
 
 
 class Display:
-    """One LED for each level, with at most one of them on."""
+    # TODO: Write a docstring for the class: a Display has one LED for each level, with at most
+    # one of them on
 
     def __init__(self, hot_pin, warm_pin, cold_pin):
-        """Make an output pin for each level and start with the LEDs off."""
-        # TODO: Store a dictionary of three output Pins with the keys "hot", "warm" and "cold"
-        self.lights = {}
-        # TODO: Store showing as "off", then turn the LEDs off with self.all_off()
+        # TODO: Write a docstring: this method makes an output pin for each level and starts with
+        # the LEDs off
+        # TODO: Assign to the attribute self.lights a dictionary with the keys "hot", "warm" and
+        # "cold", where each value is an output Pin: Pin(hot_pin, Pin.OUT) for "hot", and the
+        # same for the other two
+        # TODO: Assign "off" to the attribute self.showing
+        # TODO: Call self.all_off() so the LEDs start dark
+        pass
 
     def all_off(self):
-        """Turn the three LEDs off."""
-        # TODO: Loop over the dictionary to turn each LED off, then set showing to "off"
+        # TODO: Write a docstring: this method turns the three LEDs off
+        # TODO: Loop over the keys of self.lights, and call .off() on the Pin for each key
+        # TODO: Assign "off" to self.showing
         pass
 
     def show(self, level):
-        """Light the LED for one level, and only that one."""
-        # TODO: Turn the others off first, then light this level's LED and set showing to the level
+        # TODO: Write a docstring: this method lights the LED for one level, and only that one
+        # TODO: Call self.all_off() to turn the three LEDs off, so that only one is on at the end
+        # TODO: Call .on() on the Pin for level in self.lights
+        # TODO: Assign level to self.showing
         pass
 
     def test_lights(self):
-        """Light the three LEDs for one second, so a loose wire shows before the readings start."""
-        # TODO: Turn each LED on, sleep(1), then turn them all off
+        # TODO: Write a docstring: this method lights the three LEDs for one second, so a loose
+        # wire shows before the readings start
+        # TODO: Loop over the keys of self.lights, and call .on() on the Pin for each key
+        # TODO: Call sleep(1), then call self.all_off()
         pass

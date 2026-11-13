@@ -90,7 +90,8 @@ The Week 11 slides and
 cover what this lab asks for.
 The class names, method names and the attributes named below must match exactly, because the
 automated checks use them, and because your teammates' code calls yours. You can choose the other
-names yourself. The starter gives each method its docstring.
+names yourself. The `TODO` comments in your file walk through each method, and you write a
+docstring for your class and for each of its methods in your own words.
 
 ### How the classes connect
 
@@ -106,7 +107,7 @@ When the readings end, `main.py` turns the LEDs off and prints the log from the 
 
 ### Sensor, in sensor.py
 
-The chip reports its temperature as a number from 0 to 65535 through analog channel 4, which you
+A `Sensor` is the Pico's own temperature sensor. The chip reports its temperature as a number from 0 to 65535 through analog channel 4, which you
 read with `ADC(4)` and its `read_u16()` method. These formulas turn that number into degrees:
 
 |Value |Formula |
@@ -124,6 +125,8 @@ read with `ADC(4)` and its `read_u16()` method. These formulas turn that number 
 
 ### Levels, in levels.py
 
+`Levels` holds two dividing temperatures, in degrees Fahrenheit, that sort a reading into a level.
+
 |Method |What it does |
 |:------|:------------|
 |`__init__(self, cold_below, hot_above)` |Stores `cold_below` and `hot_above`, two temperatures in Fahrenheit |
@@ -133,14 +136,18 @@ read with `ADC(4)` and its `read_u16()` method. These formulas turn that number 
 
 ### Display, in display.py
 
+A `Display` has one LED for each level, with at most one of them on.
+
 |Method |What it does |
 |:------|:------------|
 |`__init__(self, hot_pin, warm_pin, cold_pin)` |Stores a dictionary attribute `lights` with an output `Pin` for each of the keys `"hot"`, `"warm"` and `"cold"`, stores `showing` as `"off"`, and turns the LEDs off |
 |`all_off(self)` |Turns each LED off with a loop over the dictionary, and sets `showing` to `"off"` |
-|`show(self, level)` |Turns the other LEDs off, lights the LED for `level`, and sets `showing` to `level` |
+|`show(self, level)` |Turns the three LEDs off with `self.all_off()`, then lights the LED for `level` and sets `showing` to `level` |
 |`test_lights(self)` |Lights all three LEDs, calls `sleep(1)`, then turns them off |
 
 ### Log, in log.py
+
+A `Log` keeps the temperatures taken in one place, and how many fell in each level.
 
 |Method |What it does |
 |:------|:------------|
@@ -272,7 +279,7 @@ out and what was expected. Here are the fourteen code checks:
 * at least four pull requests are merged with Merge pull request
 * the files in `src` have commits from at least two teammates
 * no `TODO` markers remain in `src`
-* each file in `src` has at least two comments
+* each file in `src` has a docstring for its class and each method, and at least two comments
 
 Partial credit is proportional, so passing 10 of 14 checks earns `(10 ÷ 14) × 3.0 = 2.14` points.
 The two remaining checks look at `docs/summary.md` and count toward Summary writing. The two

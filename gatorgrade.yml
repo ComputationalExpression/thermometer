@@ -69,10 +69,10 @@
   options:
     command: uv run pytest tests/test_structure.py::test_no_file_has_a_todo
 
-- description: "[CODE] Each file in src has at least two comments: say why, not what the line already says"
+- description: "[CODE] Each file in src has a docstring for its class and each method, and at least two comments: say why, not what the line already says"
   check: ExecuteCommand
   options:
-    command: uv run pytest tests/test_structure.py::test_each_file_has_two_comments
+    command: uv run pytest tests/test_structure.py::test_each_file_has_docstrings_and_two_comments
 
 - docs/summary.md:
   - description: "[SUMMARY] No TODO markers remain in docs/summary.md: replace each one with your answer, then delete it"
