@@ -31,6 +31,7 @@ approve.
   * [Display, in display.py](#display-in-displaypy)
   * [Log, in log.py](#log-in-logpy)
   * [The program, in main.py](#the-program-in-mainpy)
+  * [Your team's levels](#your-teams-levels)
   * [Expected output](#expected-output)
 * [Working as a team](#working-as-a-team)
 * [Getting started](#getting-started)
@@ -74,7 +75,8 @@ person takes one:
 |`src/display.py` |the `Display` class |
 |`src/log.py` |the `Log` class |
 
-`src/main.py` is provided, so nobody needs to change it.
+`src/main.py` is provided. The one change your team makes there is to set your own levels, as
+[Your team's levels](#your-teams-levels) describes.
 
 Please agree on who takes which file before anyone writes code. A team of three has one extra
 file, so please plan together how you will complete it, for example together during a lab, on its
@@ -197,9 +199,18 @@ run.
 thermometer is and how many readings to take, makes the four objects, and tests the lights. Then
 it takes a reading every two seconds until it has taken that many or the button is pressed, and
 prints the thermometer log. The button is checked once after each reading, so please hold it down
-until the next reading ends. `COLD_BELOW`, `HOT_ABOVE`, `DRY_BELOW` and `HUMID_ABOVE` near the top
-set the levels. You are welcome to change them on your own computer to see each LED light in your
-room.
+until the next reading ends.
+
+The log counts how many readings were cold, warm and hot. `Chip minus air` is the chip's
+temperature minus the air's, in degrees Fahrenheit, at the end of the run: a positive number means
+the chip reads warmer than the air, and a negative one means it reads cooler.
+
+### Your team's levels
+
+`COLD_BELOW`, `HOT_ABOVE`, `DRY_BELOW` and `HUMID_ABOVE` near the top of `main.py` decide what
+counts as cold, warm and hot, and as dry, comfortable and humid. Please choose your own four values
+for the room where you test your thermometer, set them in `main.py` through a pull request that two
+teammates approve, and explain your choices in the summary. The checks use the values you set.
 
 ### Expected output
 
@@ -225,9 +236,9 @@ Readings: 4
 Highest: 80.2
 Lowest: 71.6
 Average humidity: 52.4
-Cold: 0
-Warm: 2
-Hot: 2
+Cold readings: 0
+Warm readings: 2
+Hot readings: 2
 Chip minus air: 7.8
 Comfortable now: False
 ```
@@ -249,7 +260,7 @@ for the commands and the VS Code buttons. In short:
    approvals.
 5. **Write your summary** in `docs/summary.md` on a new branch, after updating `main`. A summary
    pull request does not need a review. Once each teammate's answer is merged, please answer the
-   last question together.
+   last two questions together.
 
 ## Getting started
 
@@ -287,7 +298,7 @@ This lab is worth **4.5 points**, the standard value for a lab in this course.
 |:----------|:-------|:-----------------|
 | Programming | 3.0 | The 14 code checks below, which are the same for each teammate. Your score is the fraction passed, times 3.0 |
 | Code quality and style | 1.0 | In the file you wrote: descriptive names (0.3), clear organization (0.3), useful comments (0.4) |
-| Summary writing | 0.5 | Your answer in `docs/summary.md`, and the team's answer to the last question |
+| Summary writing | 0.5 | Your answer in `docs/summary.md`, and the team's answers to the last two questions |
 | **Total** | **4.5** | |
 
 You can run the checks yourself, as many times as you like, before you submit:

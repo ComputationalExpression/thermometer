@@ -384,15 +384,37 @@ def run_program(capsys, air, raws, presses, wanted, place):
     return out, board
 
 
-def check_log(out, board, context, place, air, counts, chip_raw):
+def levels_for(program, air):
+    """The temperature level of each reading, and whether its humidity is comfortable, with the
+    dividing values the team set in main.py."""
+    found = []
+    for celsius, humidity in air:
+        fahrenheit = fahrenheit_of(celsius)
+        if fahrenheit < program.COLD_BELOW:
+            level = "cold"
+        elif fahrenheit > program.HOT_ABOVE:
+            level = "hot"
+        else:
+            level = "warm"
+        found.append((level, program.DRY_BELOW <= humidity <= program.HUMID_ABOVE))
+    return found
+
+
+def check_log(out, board, context, place, air, chip_raw):
+    import main as program
+
     temperatures = [fahrenheit_of(celsius) for celsius, _ in air]
     humidities = [humidity for _, humidity in air]
-    want = {"THERMOMETER LOG": place.upper(), "Readings": str(len(air)), "Cold": str(counts[0]),
-            "Warm": str(counts[1]), "Hot": str(counts[2])}
+    levels = [level for level, _ in levels_for(program, air)]
+    want = {"THERMOMETER LOG": place.upper(), "Readings": str(len(air)),
+            "Cold readings": str(levels.count("cold")), "Warm readings": str(levels.count("warm")),
+            "Hot readings": str(levels.count("hot"))}
     for label, expected in want.items():
         got = log_value(out, label)
         assert got is not None, f'no "{label}" line was printed in the thermometer log ({context})'
-        assert got == expected, f'the "{label}" line said {got}, expected {expected} ({context})'
+        assert got == expected, (
+            f'the "{label}" line said {got}, expected {expected} with the dividing values in main.py ({context})'
+        )
     numbers = {
         "Highest": round(max(temperatures), 1),
         "Lowest": round(min(temperatures), 1),
@@ -413,20 +435,24 @@ def check_log(out, board, context, place, air, counts, chip_raw):
 
 
 def test_the_program_reads_both_sensors_and_logs_them(capsys):
-    # 68.0 F comfortable, 72.5 F comfortable, 78.8 F humid, 64.4 F dry
-    air = [(20.0, 45.0), (22.5, 55.0), (26.0, 70.0), (18.0, 25.0)]
-    out, board = run_program(capsys, air, [13750], [], 4, "Alden 101")
-    check_log(out, board, "4 readings, no press", "Alden 101", air, (1, 2, 1), 13750)
+    import main as program
+
+    # About 68, 72.5, 78.8 and 64.4 F, with humidities from dry to humid
+    air = [(20.0, 45.0), (22.5, 55.0), (26.0, 70.0), (18.0, 25.0), (21.0, 97.0)]
+    out, board = run_program(capsys, air, [13750], [], len(air), "Alden 101")
+    check_log(out, board, f"{len(air)} readings, no press", "Alden 101", air, 13750)
+    pins = {"hot": [15], "warm": [14], "cold": [13]}
     flashes = [lit for seconds, lit in board.sleeps if seconds == 0.5]
-    assert [15] in flashes and [13] in flashes, (
-        "the hot LED did not flash for the humid reading, or the cold LED for the dry one: flash(level) lights "
-        "the LED for half a second, then turns it off"
-    )
+    for level, comfortable in levels_for(program, air):
+        if not comfortable:
+            assert pins[level] in flashes, (
+                f"the {level} LED did not flash for a reading whose humidity is outside DRY_BELOW to HUMID_ABOVE: "
+                f"flash(level) lights the LED for half a second, then turns it off"
+            )
 
 
 def test_the_program_stops_when_the_button_is_pressed(capsys):
     air = [(26.0, 45.0)] * 5
     # test_lights sleeps for 1 second, then each reading waits 2 more before the button is read
     out, board = run_program(capsys, air, [14184], [(4.0, 5.5)], 5, "Carr Hall")
-    check_log(out, board, "5 readings asked for, button pressed during the second", "Carr Hall", air[:2], (0, 0, 2),
-              14184)
+    check_log(out, board, "5 readings asked for, button pressed during the second", "Carr Hall", air[:2], 14184)

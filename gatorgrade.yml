@@ -81,7 +81,7 @@
       fragment: TODO
       count: 0
       exact: true
-  - description: "[SUMMARY] At least 250 words in docs/summary.md: each teammate answers the question for their own file, and the team answers the last one together"
+  - description: "[SUMMARY] At least 250 words in docs/summary.md: each teammate answers the question for their own file, and the team answers the last two together"
     check: CountFileWords
     options:
       count: 250

@@ -18,7 +18,7 @@ from display import Display
 from log import Log
 from sensors import Sensors
 
-# Degrees Fahrenheit and percent humidity. Change these to try the lights in your room
+# Your team's dividing values, in degrees Fahrenheit and percent humidity. Set them for your room
 COLD_BELOW = 68
 HOT_ABOVE = 78
 DRY_BELOW = 30
@@ -75,9 +75,9 @@ def main():
     print(f"Highest: {round(log.highest(), 1)}")
     print(f"Lowest: {round(log.lowest(), 1)}")
     print(f"Average humidity: {round(log.average_humidity(), 1)}")
-    print(f"Cold: {log.counts['cold']}")
-    print(f"Warm: {log.counts['warm']}")
-    print(f"Hot: {log.counts['hot']}")
+    print(f"Cold readings: {log.counts['cold']}")
+    print(f"Warm readings: {log.counts['warm']}")
+    print(f"Hot readings: {log.counts['hot']}")
     print(f"Chip minus air: {round(sensors.difference(), 1)}")
     print(f"Comfortable now: {comfort.is_comfortable(fahrenheit, humidity)}")
 
