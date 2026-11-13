@@ -192,7 +192,8 @@ run.
 `main.py` is provided, and it is worth reading to see how your class is used. It asks where the
 thermometer is and how many readings to take, makes the four objects, and tests the lights. Then
 it takes a reading every two seconds until it has taken that many or the button is pressed, and
-prints the thermometer log. `COLD_BELOW`, `HOT_ABOVE`, `DRY_BELOW` and `HUMID_ABOVE` near the top
+prints the thermometer log. The button is checked once after each reading, so please hold it down
+until the next reading ends. `COLD_BELOW`, `HOT_ABOVE`, `DRY_BELOW` and `HUMID_ABOVE` near the top
 set the levels. You are welcome to change them on your own computer to see each LED light in your
 room.
 
