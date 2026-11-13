@@ -14,8 +14,8 @@ class Sensors:
     def __init__(self, air_pin):
         # TODO: Write a docstring: this method connects to both sensors, with no air reading
         # taken yet
-        # TODO: Assign ADC(4) to an attribute, such as self.chip, so the other methods can read
-        # the chip's sensor through it
+        # TODO: Assign ADC(4), the temperature sensor built into the Pico's chip, to an attribute,
+        # such as self.chip, so the other methods can read it
         # TODO: Assign dht.DHT22(Pin(air_pin)) to an attribute, such as self.air, so the other
         # methods can measure the air through it
         # TODO: Assign 0 to each of the attributes self.air_celsius, self.humidity and

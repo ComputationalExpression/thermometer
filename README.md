@@ -93,7 +93,9 @@ unplug the USB cable before you touch the wiring.
 |`OUT` |GP2 (physical pin 4) |
 |`-` |GND (physical pin 38) |
 
-The temperature sensor inside the chip needs no wiring.
+The Pico's chip is the RP2350, the black square near the middle of the board that runs your
+program, and it has a temperature sensor built into it. The sensor is connected inside the chip to
+channel 4 of its analog-to-digital converter, so it needs no wiring and no GP pin.
 
 ![Three LEDs on GP15, GP14 and GP13, a push button on GP16, and a DHT22 above the board with its + wire to row 5 i beside 3V3, its OUT wire to row 4 b beside GP2, and its minus wire to the top minus rail](images/thermometer-circuit.svg)
 
@@ -132,8 +134,9 @@ The DHT22 is made with `dht.DHT22(Pin(2))`, from MicroPython's `dht` module. Its
 method takes a new reading, and then `temperature()` returns it in degrees Celsius and `humidity()`
 returns the humidity in percent.
 
-The chip's sensor is made with `ADC(4)`, and its `read_u16()` method returns a number from 0 to
-65535. These formulas turn that number into degrees:
+The sensor built into the chip is read with `ADC(4)`, channel 4 of the analog-to-digital
+converter, and its `read_u16()` method returns a number from 0 to 65535. These formulas turn that
+number into degrees:
 
 |Value |Formula |
 |:-----|:-------|
